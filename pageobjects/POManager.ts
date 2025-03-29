@@ -6,63 +6,95 @@ import {ProductComparisonPage} from './ProductComparisonPage';
 import {ProductDetailsPage} from './ProductDetailsPage';
 import {ProductListPage} from './ProductListPage';
 import {MyWishListPage} from './MyWishListPage';
-import {Page} from '@playwright/test';
+import {PaymentPage} from './PaymentPage';
+import {BrowserContext, Page} from '@playwright/test';
 
-export class POManager{
+export class POManager {
+    private context: BrowserContext;
+    private page!: Page;
 
-    page : Page;
-    navBar : NavBar;
-    loginPage : LoginPage;
-    myAccountPage : MyAccountPage;
-    myOrdersPage : MyOrdersPage;
-    productComparisonPage : ProductComparisonPage;
-    productDetailsPage : ProductDetailsPage;
-    productListPage : ProductListPage;
-    myWishListPage : MyWishListPage;
+    private navBar?: NavBar;
+    private loginPage?: LoginPage;
+    private myAccountPage?: MyAccountPage;
+    private myOrdersPage?: MyOrdersPage;
+    private productComparisonPage?: ProductComparisonPage;
+    private productDetailsPage?: ProductDetailsPage;
+    private productListPage?: ProductListPage;
+    private myWishListPage?: MyWishListPage;
+    private paymentPage?: PaymentPage;
 
-    constructor(page : Page){
-        this.page = page;
-        this.navBar = new NavBar(this.page);
-        this.loginPage = new LoginPage(this.page);
-        this.myAccountPage = new MyAccountPage(this.page);
-        this.myOrdersPage = new MyOrdersPage(this.page);
-        this.productComparisonPage = new ProductComparisonPage(this.page);
-        this.productDetailsPage = new ProductDetailsPage(this.page);
-        this.productListPage = new ProductListPage(this.page);
-        this.myWishListPage = new MyWishListPage(this.page);
+    constructor(context: BrowserContext) {
+        this.context = context;
     }
 
-    getNavBar(){
+    async init() {
+        this.page = await this.context.newPage();
+    }
+
+    getPage(): Page {
+        return this.page;
+    }
+
+    getNavBar(): NavBar {
+        if (!this.navBar) {
+            this.navBar = new NavBar(this.page);
+        }
         return this.navBar;
     }
 
-    getLoginPage(){
+    getLoginPage(): LoginPage {
+        if (!this.loginPage) {
+            this.loginPage = new LoginPage(this.page);
+        }
         return this.loginPage;
     }
 
-    getMyAccountPage(){
+    getMyAccountPage(): MyAccountPage {
+        if (!this.myAccountPage) {
+            this.myAccountPage = new MyAccountPage(this.page);
+        }
         return this.myAccountPage;
     }
 
-    getMyOrdersPage(){
+    getMyOrdersPage(): MyOrdersPage {
+        if (!this.myOrdersPage) {
+            this.myOrdersPage = new MyOrdersPage(this.page);
+        }
         return this.myOrdersPage;
     }
 
-    getProductComparisonPage(){
+    getProductComparisonPage(): ProductComparisonPage {
+        if (!this.productComparisonPage) {
+            this.productComparisonPage = new ProductComparisonPage(this.page);
+        }
         return this.productComparisonPage;
     }
 
-    getProductDetailsPage(){
+    getProductDetailsPage(): ProductDetailsPage {
+        if (!this.productDetailsPage) {
+            this.productDetailsPage = new ProductDetailsPage(this.page);
+        }
         return this.productDetailsPage;
     }
 
-    getProductListPage(){
+    getProductListPage(): ProductListPage {
+        if (!this.productListPage) {
+            this.productListPage = new ProductListPage(this.page);
+        }
         return this.productListPage;
     }
 
-    getMyWishListPage(){
+    getMyWishListPage(): MyWishListPage {
+        if (!this.myWishListPage) {
+            this.myWishListPage = new MyWishListPage(this.page);
+        }
         return this.myWishListPage;
     }
-}
 
-module.exports = {POManager}
+    getPaymentPage(): PaymentPage {
+        if (!this.paymentPage) {
+            this.paymentPage = new PaymentPage(this.page);
+        }
+        return this.paymentPage;
+    }
+}

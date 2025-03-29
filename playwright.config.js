@@ -4,7 +4,7 @@ const { devices } = require('@playwright/test');
 const config = {
    testDir: './tests',
    //Maximum time one test can run for.
-   timeout: 30 * 1000,
+   timeout: 120 * 1000,
    expect: {
 
     timeout: 5000
@@ -18,7 +18,7 @@ const config = {
         use: {
   
           browserName : 'webkit',
-          headless : true,
+          headless : false,
           screenshot : 'off',
           trace : 'on',//off,on 
           ...devices['iPhone 11'],    

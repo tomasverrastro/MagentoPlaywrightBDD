@@ -23,6 +23,7 @@ export class ProductDetailsPage{
         return await this.txtProductDescription.textContent();
     }
 
+
     async clickProductReviewsBtn(){
         await this.btnProductReviews.click();
     }

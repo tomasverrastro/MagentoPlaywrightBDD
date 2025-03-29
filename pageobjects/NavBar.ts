@@ -30,6 +30,8 @@ export class NavBar{
     gearBagsBtn : Locator;
     gearFitnessBtn : Locator;
     gearWatchesBtn : Locator;
+    txtLoginGreeting : Locator;
+    checkoutBtn : Locator;
   
 
    
@@ -42,7 +44,7 @@ export class NavBar{
         this.myWishListBtn = page.locator("a[href='https://magento.softwaretestingboard.com/wishlist/']:visible");
         this.signOutBtn = page.locator("a[href='https://magento.softwaretestingboard.com/customer/account/logout/']:visible");
         this.productSearchBox = page.locator("#search");
-        this.cartBtn = page.locator("a[href='https://magento.softwaretestingboard.com/checkout/cart/']");
+        this.cartBtn = page.locator(".action.showcart");
         this.womenBtn = page.locator("a[href='https://magento.softwaretestingboard.com/women.html']");
         this.menBtn = page.locator("a[href='https://magento.softwaretestingboard.com/men.html']");
         this.gearBtn = page.locator("a[href='https://magento.softwaretestingboard.com/gear.html']");
@@ -64,6 +66,27 @@ export class NavBar{
         this.gearBagsBtn = page.locator("a[href='https://magento.softwaretestingboard.com/gear/bags.html']");
         this.gearFitnessBtn = page.locator("a[href='https://magento.softwaretestingboard.com/gear/fitness-equipment.html']");
         this.gearWatchesBtn = page.locator("a[href='https://magento.softwaretestingboard.com/gear/watches.html']");
+        this.txtLoginGreeting = page.locator(".logged-in:visible");
+        this.checkoutBtn = page.locator("#top-cart-btn-checkout");
+    }
+
+    async hoverUntilVisible(hoverElement: Locator, dropdownSelector: string) {
+        const maxRetries: number = 15
+        const delayMs: number = 200
+        let attempts = 0;
+        
+        while (attempts < maxRetries) {
+            await hoverElement.hover(); 
+            await this.page.waitForTimeout(delayMs);
+    
+            const isVisible = await this.page.locator(dropdownSelector).isVisible();
+            if (isVisible) return; 
+    
+            attempts++;
+            await this.gearBtn.hover();
+        }
+    
+        throw new Error(`El dropdown '${dropdownSelector}' no se hizo visible después de ${maxRetries} intentos.`);
     }
     
     async clickSignInBtn(){
@@ -92,6 +115,7 @@ export class NavBar{
 
     async searchProduct(product : string){
         await this.productSearchBox.fill(product);
+        await this.page.locator(`#search_autocomplete:has-text("${product}")`).click();
     }
 
     async clickCartBtn(){
@@ -140,8 +164,9 @@ export class NavBar{
     }
 
     async hoverMenBtn(){
-        await this.menBtn.hover();
+        await this.hoverUntilVisible(this.menBtn, ".level1.nav-3-1.category-item.first.parent.ui-menu-item");
     }
+
 
     async hoverMenTopsBtn(){
         await this.menTopsBtn.hover();
@@ -184,7 +209,7 @@ export class NavBar{
     }
 
     async hoverGearBtn(){
-        await this.gearBtn.click();
+        await this.gearBtn.hover();
     }
 
     async clickGearBagsBtn(){
@@ -201,6 +226,14 @@ export class NavBar{
 
     async goTo(){
     await this.page.goto("https://magento.softwaretestingboard.com/");
+    }
+
+    async getLoginGreetingMsg(){
+        return await this.txtLoginGreeting.textContent();
+    }
+
+    async clickCheckoutBtn(){
+        return await this.checkoutBtn.click();
     }
 }
 
